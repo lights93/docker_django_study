@@ -1,0 +1,7 @@
+.idea
+docker-compose.yml
+Dockerfile
+mysql
+my.cnf
+venv
+.dockerignore

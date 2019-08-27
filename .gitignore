@@ -1,0 +1,6 @@
+venv/
+.idea/
+mysql/
+logs/
+mysql/
+config/settings/secrets.json

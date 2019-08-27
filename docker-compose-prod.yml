@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  mysql_study:
+    container_name: mysql_study
+    image: mysql/mysql-server:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=study
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+    ports:
+      - 23306:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./my.cnf:/etc/my.cnf
+
+  django_app:
+    container_name: django_app
+    build: .
+    ports:
+      - 28000:8000
+    environment:
+      - MYSQL_DATABASE=study
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=mysql_study
+      - MYSQL_PORT=3306
+      - DJANGO_SETTINGS_MODULE=config.settings.production
+    volumes:
+      - ./:/app
+    command: >
+      bash -c "./wait-for-it.sh mysql_study:3306 -- echo db_connection_good
+      && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - mysql_study
